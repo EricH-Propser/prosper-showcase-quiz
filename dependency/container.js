@@ -22,7 +22,7 @@ module.exports = function(){
     container.testApi = new testApiDef(container.questionsService);
 
     var quizMasterDef = require('../api/quiz-master');
-    container.quizMaster = new quizMasterDef(config, container.questionsApi, container.slackApi);
+    container.quizMaster = new quizMasterDef(container.config, container.questionsApi, container.slackApi);
 
     return container;
 };

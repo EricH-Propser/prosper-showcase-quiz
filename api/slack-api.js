@@ -12,8 +12,8 @@ function SlackApi(config, questionService){
         throw new Error("No application quiz key defined");
     }
 
-    console.log("Will use slack oauth token: "+APPLICATION_SLACK_OAUTH_TOKEN);
-    console.log("Will use slack interactive token key: "+QUIZ_SLACK_TOKEN);
+    console.log("Will use slack oauth token: "+config.APPLICATION_SLACK_OAUTH_TOKEN);
+    console.log("Will use slack interactive token key: "+config.QUIZ_SLACK_TOKEN);
 }
 
 SlackApi.prototype.slackInteractive = function (request, response) {
@@ -45,17 +45,15 @@ SlackApi.prototype.slackInteractive = function (request, response) {
     if ( textEntered === 'play') {
         console.log("Player ["+name+"] with userId ["+userId+"] has opted to join the quiz");
         addSlackUserInfo(name, true, userId, slashCommandChannelId);
-        return response.status(200).json( { text: "Hurrah! You've registered to be part of the amazing Prosper quiz extravaganza!"} );
+        return response.status(200).json( { text: "Hurrah! You've registered. Note, all further interaction will be done in the slackbot channel, so go there!"} );
     }  
     
-    if ( textEntered === 'stop') {
-        return response.status(200).json( { text: "Hurrah! You've registered. Note, all further interaction will be done in the slackbot channel, so go there!"} );
-    } 
+    if ( textEntered === 'stop') {  
         console.log("Player ["+name+"] has opted to stop playing in the the quiz");
         removeSlackUserFromQuiz(name);
         return response.status(200).json( { text: "You got it! I won't annoy you anymore with the quiz"} );
     }
-   
+
     addSlackNonInteractiveUserIfNotFound(name, userId, slashCommandChannelId);
     // We'll just treat this like they are answering normally (i.e. /quiz 2)
     return recordSlackAnswer(name, textEntered, response);
